@@ -2,6 +2,7 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 const url = require("url");
 const axios = require("axios");
+const notifier = require('node-notifier');
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -25,6 +26,10 @@ function GetLatestPrice(baseUrl) {
       `https://tiki.vn/api/v2/products/${baseProductId}?platform=web&spid=${productId}`
     ).then(({ data }) => {
       if (map[data.id] != data.price) {
+        notifier.notify({
+            title: data.name,
+            message: `${new Intl.NumberFormat().format(data.price)} ₫`,
+          });
         map[data.id] = data.price;
         console.log(`[${new Date()}] ${data.name}: ${new Intl.NumberFormat().format(data.price)} ₫`);
       }
@@ -32,7 +37,7 @@ function GetLatestPrice(baseUrl) {
   }
   setTimeout(() => {
     GetLatestPrice(baseUrl);
-  }, 5000);
+  }, +process.env.INTERVAL);
 }
 GetLatestPrice(process.env.PRODUCT_URL);
 
