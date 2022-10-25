@@ -14,14 +14,11 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
-const TEST_URL =
-  "https://tiki.vn/dien-thoai-samsung-galaxy-s22-ultra-5g-12gb-256gb-hang-chinh-hang-p162593136.html?itm_campaign=CTP_YPD_TKA_PLA_UNK_ALL_UNK_UNK_UNK_UNK_X.160801_Y.1741887_Z.3072571_CN.Product-Ads-Auto-Focus&itm_medium=CPC&itm_source=tiki-ads&spid=162593142";
-
 
 const map = {};
 function GetLatestPrice(baseUrl) {
   if (baseUrl.startsWith("https://tiki.vn")) {
-    const u = url.parse(TEST_URL, true);
+    const u = url.parse(baseUrl, true);
     const productId = u.query.spid;
     const baseProductId = u.pathname.substring(u.pathname.lastIndexOf("p") + 1, u.pathname.length - 5);
     axios(
@@ -29,7 +26,7 @@ function GetLatestPrice(baseUrl) {
     ).then(({ data }) => {
       if (map[data.id] != data.price) {
         map[data.id] = data.price;
-        console.log(`[${new Date()}] ${data.name}: ${data.price}₫`);
+        console.log(`[${new Date()}] ${data.name}: ${new Intl.NumberFormat().format(data.price)} ₫`);
       }
     });
   }
@@ -37,7 +34,7 @@ function GetLatestPrice(baseUrl) {
     GetLatestPrice(baseUrl);
   }, 5000);
 }
-GetLatestPrice(TEST_URL);
+GetLatestPrice(process.env.PRODUCT_URL);
 
 const content = `
     Chào Triều!
