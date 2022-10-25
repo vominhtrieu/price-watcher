@@ -1,0 +1,16 @@
+{
+  "name": "pricewatcherbot",
+  "version": "1.0.0",
+  "description": "A bot that automatically send email when the price is changed",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "npm run test"
+  },
+  "author": "Vo Minh Trieu",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "nodemailer": "^6.8.0"
+  }
+}
